@@ -1,11 +1,25 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // Codeblitz ships pre-bundled UMD-ish artifacts under @codeblitzjs/ide-core/bundle.
-// We mark a few node-style globals as defined so its browser bundle is happy
-// inside Vite's ESM dev pipeline.
+// Its webpack runtime fetches WASM and worker chunks via *relative* URLs from
+// the document root (e.g. `/a5d01a41d1b288b6934e.module.wasm`). Vite has no
+// reason to expose those node_modules assets at the root, so we mirror them
+// here for both `dev` and `build`.
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@codeblitzjs/ide-core/bundle/*.wasm',
+          dest: '.',
+          rename: { stripBase: true },
+        },
+      ],
+    }),
+  ],
   define: {
     global: 'globalThis',
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'development'),
@@ -15,8 +29,6 @@ export default defineConfig({
     port: 5173,
   },
   optimizeDeps: {
-    // The codeblitz bundle is large and imports CSS side-effects; let Vite
-    // pre-bundle it so HMR stays snappy.
     include: ['@codeblitzjs/ide-core/bundle'],
     esbuildOptions: {
       define: { global: 'globalThis' },
