@@ -1,0 +1,115 @@
+:root {
+  color-scheme: dark;
+  --codez-bg: #0b0d12;
+  --codez-surface: #11141b;
+  --codez-border: #1f2430;
+  --codez-text: #e6e8ee;
+  --codez-muted: #8a93a6;
+  --codez-accent: #7c5cff;
+  --codez-accent-2: #22d3ee;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--codez-bg);
+  color: var(--codez-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.codez-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.codez-titlebar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 38px;
+  padding: 0 14px;
+  background: linear-gradient(180deg, #0e1117 0%, #0b0d12 100%);
+  border-bottom: 1px solid var(--codez-border);
+  user-select: none;
+}
+
+.codez-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(90deg, var(--codez-accent), var(--codez-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.codez-logo svg {
+  width: 18px;
+  height: 18px;
+}
+
+.codez-title-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--codez-muted);
+  font-size: 12px;
+}
+
+.codez-pill {
+  padding: 2px 8px;
+  border: 1px solid var(--codez-border);
+  border-radius: 999px;
+  background: var(--codez-surface);
+}
+
+.codez-ide {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}
+
+.codez-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--codez-muted);
+  background: var(--codez-bg);
+  z-index: 5;
+}
+
+.codez-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--codez-border);
+  border-top-color: var(--codez-accent);
+  animation: codez-spin 0.8s linear infinite;
+}
+
+@keyframes codez-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tone the codeblitz chrome to match our theme. The codeblitz CSS uses
+ * VSCode-style theme variables; the workbench picks up the Dark+ defaults,
+ * which already blend reasonably with our palette. */
+.codez-ide :global(.kt-workbench) {
+  background: var(--codez-bg);
+}
