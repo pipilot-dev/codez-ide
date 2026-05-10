@@ -1,18 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { WebContainer } from '@webcontainer/api';
 import '@xterm/xterm/css/xterm.css';
-
-// Singleton WebContainer instance — booting is expensive and only one is
-// allowed per page. Survives terminal panel remounts.
-let bootingPromise: Promise<WebContainer> | null = null;
-function bootWebContainer(): Promise<WebContainer> {
-  if (!bootingPromise) {
-    bootingPromise = WebContainer.boot();
-  }
-  return bootingPromise;
-}
+import { workspaceBridge } from './workspace-bridge';
 
 export function CodezTerminalView() {
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -39,14 +29,14 @@ export function CodezTerminalView() {
       try {
         fit.fit();
       } catch {
-        // xterm throws if the host element isn't laid out yet — safe to ignore.
+        // xterm throws if the host element isn't laid out yet.
       }
     });
     ro.observe(hostRef.current);
 
     let disposed = false;
     let writer: WritableStreamDefaultWriter<string> | null = null;
-    let process: Awaited<ReturnType<WebContainer['spawn']>> | null = null;
+    let process: Awaited<ReturnType<Awaited<ReturnType<typeof workspaceBridge.ready>>['spawn']>> | null = null;
 
     (async () => {
       term.writeln('\x1b[38;5;141mCodez\x1b[0m terminal — booting WebContainer…');
@@ -54,12 +44,13 @@ export function CodezTerminalView() {
         if (!self.crossOriginIsolated) {
           term.writeln('\x1b[31mError:\x1b[0m page is not cross-origin isolated.');
           term.writeln(
-            'Set COOP/COEP headers on the dev server and reload (already configured in vite.config.ts).',
+            'Set COOP/COEP headers on the host (already configured in vite.config.ts).',
           );
           return;
         }
-        const wc = await bootWebContainer();
+        const wc = await workspaceBridge.ready();
         if (disposed) return;
+        term.writeln('\x1b[38;5;141mCodez\x1b[0m terminal ready. Workspace mounted at /.');
         const { cols, rows } = term;
         process = await wc.spawn('jsh', { terminal: { cols, rows } });
         process.output.pipeTo(

@@ -3,6 +3,7 @@ import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
 import { OpenVsxExtensionManagerModule } from '@opensumi/ide-extension-manager/lib/browser';
 import { CodezExtensionMarketplaceModule } from './extension-manager/module';
 import { CodezTerminalModule } from './terminal/module';
+import { workspaceBridge } from './terminal/workspace-bridge';
 
 // Curated bundled extensions. Each is a worker/runtime extension shipped with
 // codeblitz; adding it to `extensionMetadata` makes it appear as installed.
@@ -93,21 +94,42 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
     [workspaceDir],
   );
 
-  const runtimeConfig = useMemo(
-    () => ({
+  const runtimeConfig = useMemo(() => {
+    workspaceBridge.setWorkspaceRoot(`/workspace/${workspaceDir}`);
+    return {
       workspace: {
         filesystem: {
           fs: 'IndexedDB' as const,
           options: { storeName: `codez-${workspaceDir}` },
         },
         initialFileTree: async () => SEED_FILES,
+        // Forward file edits to the WebContainer terminal sandbox so the
+        // shell sees the same files the editor edits. The bridge is a no-op
+        // until the terminal panel has booted and mounted the workspace.
+        onDidSaveTextDocument: ({
+          filepath,
+          content,
+        }: {
+          filepath: string;
+          content: string;
+        }) => {
+          void workspaceBridge.writeFile(filepath, content);
+        },
+        onDidCreateFiles: (files: string[]) => {
+          for (const f of files) void workspaceBridge.writeFile(f, '');
+        },
+        onDidDeleteFiles: (files: string[]) => {
+          for (const f of files) void workspaceBridge.deleteFile(f);
+        },
+        onDidChangeFiles: (changes: { filepath: string; content: string }[]) => {
+          for (const c of changes) void workspaceBridge.writeFile(c.filepath, c.content);
+        },
       },
       defaultOpenFile: 'README.md',
       startupEditor: 'readme' as const,
       scenario: 'codez',
-    }),
-    [workspaceDir],
-  );
+    };
+  }, [workspaceDir]);
 
   useEffect(() => {
     const t = window.setTimeout(() => onReady?.(), 50);
