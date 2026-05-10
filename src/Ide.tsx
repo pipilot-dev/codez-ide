@@ -1,6 +1,20 @@
 import { useEffect, useMemo } from 'react';
 import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
+
+// Curated bundled extensions. Each is a worker/runtime extension shipped with
+// codeblitz; adding it to `extensionMetadata` makes it appear as installed.
 import typescriptWorker from '@codeblitzjs/ide-core/extensions/codeblitz.typescript-language-features-worker';
+import jsonWorker from '@codeblitzjs/ide-core/extensions/codeblitz.json-language-features-worker';
+import cssWorker from '@codeblitzjs/ide-core/extensions/codeblitz.css-language-features-worker';
+import htmlWorker from '@codeblitzjs/ide-core/extensions/codeblitz.html-language-features-worker';
+import markdownWorker from '@codeblitzjs/ide-core/extensions/codeblitz.markdown-language-features-worker';
+import emmet from '@codeblitzjs/ide-core/extensions/codeblitz.emmet';
+import referencesView from '@codeblitzjs/ide-core/extensions/codeblitz.references-view';
+import imagePreview from '@codeblitzjs/ide-core/extensions/codeblitz.image-preview';
+import mergeConflict from '@codeblitzjs/ide-core/extensions/codeblitz.merge-conflict';
+import gitGraph from '@codeblitzjs/ide-core/extensions/codeblitz.git-graph';
+import gitlens from '@codeblitzjs/ide-core/extensions/codeblitz.gitlens';
+
 import { SEED_FILES } from './seed';
 
 interface IdeProps {
@@ -8,13 +22,45 @@ interface IdeProps {
   onReady?: () => void;
 }
 
+// Mirrors codeblitz's default getDefaultLayoutConfig() but extends the `left`
+// slot (the activity bar) with SCM (git) and Debug. Note: codeblitz's
+// mergeConfig fully replaces `layoutConfig`, so we have to spell out every
+// slot the default would have provided.
+const layoutConfig = {
+  top: { modules: ['@opensumi/ide-menu-bar'] },
+  action: { modules: [''] },
+  left: {
+    modules: [
+      '@opensumi/ide-explorer',
+      '@opensumi/ide-search',
+      '@opensumi/ide-scm',
+      '@opensumi/ide-debug',
+    ],
+  },
+  main: { modules: ['@opensumi/ide-editor'] },
+  bottom: { modules: ['@opensumi/ide-output', '@opensumi/ide-markers'] },
+  statusBar: { modules: ['@opensumi/ide-status-bar'] },
+  extra: { modules: ['breadcrumb-menu'] },
+};
+
 export default function Ide({ workspaceDir, onReady }: IdeProps) {
   const appConfig = useMemo(
     () => ({
       workspaceDir,
-      // Language-feature extensions running in workers — gives intellisense,
-      // go-to-definition, and diagnostics for TS/JS without a backend.
-      extensionMetadata: [typescriptWorker],
+      layoutConfig,
+      extensionMetadata: [
+        typescriptWorker,
+        jsonWorker,
+        cssWorker,
+        htmlWorker,
+        markdownWorker,
+        emmet,
+        referencesView,
+        imagePreview,
+        mergeConflict,
+        gitGraph,
+        gitlens,
+      ],
       defaultPreferences: {
         'general.theme': 'opensumi-dark',
         'general.icon': 'vsicons-slim',
@@ -35,12 +81,9 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
     () => ({
       workspace: {
         filesystem: {
-          // Persist the workspace across page reloads via IndexedDB.
           fs: 'IndexedDB' as const,
           options: { storeName: `codez-${workspaceDir}` },
         },
-        // Seed the workspace on first boot. After that the user's edits in
-        // IndexedDB take precedence and we no-op.
         initialFileTree: async () => SEED_FILES,
       },
       defaultOpenFile: 'README.md',
@@ -51,9 +94,6 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
   );
 
   useEffect(() => {
-    // AppRenderer doesn't expose an onReady, but mounting it is synchronous
-    // enough that one tick later the workbench DOM is in place. Good enough
-    // to drop the loading overlay.
     const t = window.setTimeout(() => onReady?.(), 50);
     return () => window.clearTimeout(t);
   }, [onReady]);
