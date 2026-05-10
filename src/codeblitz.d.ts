@@ -8,6 +8,10 @@ declare module '@codeblitzjs/ide-core/bundle' {
     runtimeConfig?: Record<string, unknown>;
   }>;
   export const SlotRenderer: ComponentType<{ slot: string }>;
+  // Codeblitz exposes a curated set of node-style modules to userland code
+  // (see lib/api/require.d.ts). We type it loosely here — callers pin the
+  // shape they expect at the call site.
+  export function requireModule(name: string): unknown;
 }
 
 declare module '@codeblitzjs/ide-core/bundle/codeblitz.css';

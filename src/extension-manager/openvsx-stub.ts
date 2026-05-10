@@ -1,30 +1,50 @@
-// Pure-browser stub for the OpenVSX backend service that
-// `@opensumi/ide-extension-manager` expects on the Node side.
+// Pure-browser replacement for the Node-side VSXExtensionServicePath service
+// that @opensumi/ide-extension-manager normally requires.
 //
-// The real backend lives in `@opensumi/ide-extension-manager/lib/node` and uses
-// node-fetch to hit https://open-vsx.org. Codeblitz has no Node runtime, so
-// without this stub the activity-bar Extensions panel mounts but every RPC
-// rejects with METHOD_NOT_REGISTERED.
+// The original Node service does four things:
+//   1. proxies marketplace REST calls (search/getExtension/getOpenVSXRegistry)
+//   2. downloads the .vsix over HTTP with retries
+//   3. unzips it onto disk, stripping the "extension/" prefix that VSIX zips
+//      wrap their contents in
+//   4. writes files into appConfig.marketplace.extensionDir, which the
+//      extension host scans on next refresh
 //
-// This stub fulfils the *read* surface of the API by calling open-vsx.org's
-// public REST API directly from the browser (it returns CORS-friendly JSON).
-// Install/uninstall are intentionally left unimplemented — they require VSIX
-// download + extraction + writing into the in-browser extension host, which is
-// a separate, larger piece of work.
+// This implementation does all four against the codeblitz browser environment:
+// fetch() for HTTP, fflate for unzip, and codeblitz's requireModule('fs-extra')
+// to write into the BrowserFS-backed virtual disk mounted at /home/.codeblitz.
+//
+// After install() returns the install path, the marketplace UI calls
+// extensionManagementService.postChangedExtension(false, path) which
+// instantiates and activates the extension.
+
+import { unzip } from 'fflate';
+import { requireModule } from '@codeblitzjs/ide-core/bundle';
 
 const OPEN_VSX_REGISTRY = 'https://open-vsx.org';
+const EXTENSIONS_DIR = '/home/.codeblitz/extensions';
+const VSIX_PREFIX = 'extension/';
 
 async function json<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
-  if (!res.ok) {
-    throw new Error(`OpenVSX ${res.status}: ${url}`);
-  }
+  if (!res.ok) throw new Error(`OpenVSX ${res.status}: ${url}`);
   return res.json() as Promise<T>;
 }
 
+function unzipAsync(bytes: Uint8Array): Promise<Record<string, Uint8Array>> {
+  return new Promise((resolve, reject) => {
+    unzip(
+      bytes,
+      // Filter to extension/ payload only — VSIX root files like
+      // [Content_Types].xml and extension.vsixmanifest aren't needed.
+      { filter: (file) => file.name.startsWith(VSIX_PREFIX) },
+      (err, files) => (err ? reject(err) : resolve(files)),
+    );
+  });
+}
+
 export class BrowserVsxExtensionBackService {
-  // The browser-side service reads this once at boot to render the registry
-  // badge and to build download URLs.
+  // ---- Read APIs ----
+
   async getOpenVSXRegistry(): Promise<string> {
     return OPEN_VSX_REGISTRY;
   }
@@ -37,8 +57,20 @@ export class BrowserVsxExtensionBackService {
     return json(`${OPEN_VSX_REGISTRY}/api/-/search?${qs.toString()}`);
   }
 
-  async getExtension({ namespace, name }: { namespace: string; name: string }) {
-    return json(`${OPEN_VSX_REGISTRY}/api/${namespace}/${name}`);
+  async getExtension(query: { extensionId?: string; namespace?: string; name?: string }) {
+    const ext = query.extensionId
+      ? query.extensionId
+      : `${query.namespace}.${query.name}`;
+    const [namespace, name] = ext.split('.');
+    if (!namespace || !name) {
+      throw new Error(`Invalid extension id: ${ext}`);
+    }
+    const detail = await json<Record<string, unknown>>(
+      `${OPEN_VSX_REGISTRY}/api/${namespace}/${name}`,
+    );
+    // Marketplace UI expects { extensions: [...] } shape (matches OpenSumi
+    // search result). Single-detail call returns one entry, so wrap it.
+    return { extensions: [detail] };
   }
 
   async getAllVersion({ namespace, name }: { namespace: string; name: string }) {
@@ -51,16 +83,48 @@ export class BrowserVsxExtensionBackService {
     return res.text();
   }
 
-  // Install / uninstall require writing VSIX bytes into the extension host's
-  // virtual FS. Not supported in this pure-browser build.
-  async install(): Promise<never> {
-    throw new Error(
-      'Extension install is not supported in the pure-browser build. ' +
-        'Pre-bundle extensions via appConfig.extensionMetadata instead.',
-    );
+  // ---- Install pipeline ----
+
+  async install(param: { id: string; name: string; url: string; version: string }) {
+    const fse = requireModule('fs-extra') as {
+      ensureDir(p: string): Promise<void>;
+      writeFile(p: string, data: Uint8Array | string): Promise<void>;
+      pathExists(p: string): Promise<boolean>;
+    };
+    const path = requireModule('path') as { join(...p: string[]): string; dirname(p: string): string };
+
+    const installRoot = path.join(EXTENSIONS_DIR, `${param.id}-${param.version}`);
+
+    // If a previous install for this exact id+version already wrote a
+    // package.json, we're done — the extension host will pick it up on its
+    // next scan.
+    if (await fse.pathExists(path.join(installRoot, 'package.json'))) {
+      return installRoot;
+    }
+
+    const res = await fetch(param.url);
+    if (!res.ok) {
+      throw new Error(`Download VSIX ${res.status}: ${param.url}`);
+    }
+    const buf = new Uint8Array(await res.arrayBuffer());
+    const entries = await unzipAsync(buf);
+
+    await fse.ensureDir(installRoot);
+    for (const [name, data] of Object.entries(entries)) {
+      // Skip directory entries (zero-length, name ends with /).
+      if (!data || data.length === 0 || name.endsWith('/')) continue;
+      const rel = name.slice(VSIX_PREFIX.length);
+      if (!rel) continue;
+      const target = path.join(installRoot, rel);
+      await fse.ensureDir(path.dirname(target));
+      await fse.writeFile(target, data);
+    }
+    return installRoot;
   }
 
-  async uninstall(): Promise<never> {
-    throw new Error('Extension uninstall is not supported in the pure-browser build.');
+  async uninstall(): Promise<void> {
+    // Marketplace UI calls extensionManagementService.postUninstallExtension
+    // directly, which removes files via OpenSumi's IFileService — this RPC
+    // hook is unused in that flow.
   }
 }

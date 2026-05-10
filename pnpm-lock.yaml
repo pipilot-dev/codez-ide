@@ -20,6 +20,9 @@ importers:
       '@opensumi/ide-extension-manager':
         specifier: 3.7.2-next-1741226843.0
         version: 3.7.2-next-1741226843.0(electron@42.0.1)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      fflate:
+        specifier: ^0.8.2
+        version: 0.8.2
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1334,6 +1337,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.8.2:
+    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
   figures@2.0.0:
     resolution: {integrity: sha512-Oa2M9atig69ZkfwiApY8F2Yy+tzMbazyvqv21R0NsSC8floSOC09BbT1ITWAdoMGQvJ/aZnR1KMwdx9tvHnTNA==}
@@ -4813,6 +4819,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
+
+  fflate@0.8.2: {}
 
   figures@2.0.0:
     dependencies:
