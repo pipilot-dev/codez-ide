@@ -3,7 +3,9 @@ import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
 import { OpenVsxExtensionManagerModule } from '@opensumi/ide-extension-manager/lib/browser';
 import { CodezExtensionMarketplaceModule } from './extension-manager/module';
 import { CodezTerminalModule } from './terminal/module';
+import { CodezFilesModule } from './files/module';
 import { workspaceBridge } from './terminal/workspace-bridge';
+import type { SeedFiles } from './files/types';
 
 // Curated bundled extensions. Each is a worker/runtime extension shipped with
 // codeblitz; adding it to `extensionMetadata` makes it appear as installed.
@@ -23,6 +25,8 @@ import { SEED_FILES } from './seed';
 
 interface IdeProps {
   workspaceDir: string;
+  /** Optional initial files for fresh workspaces (e.g. opened from disk). */
+  seed?: SeedFiles;
   onReady?: () => void;
 }
 
@@ -55,7 +59,7 @@ const layoutConfig = {
   extra: { modules: ['breadcrumb-menu'] },
 };
 
-export default function Ide({ workspaceDir, onReady }: IdeProps) {
+export default function Ide({ workspaceDir, seed, onReady }: IdeProps) {
   const appConfig = useMemo(
     () => ({
       workspaceDir,
@@ -64,6 +68,7 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
         OpenVsxExtensionManagerModule,
         CodezExtensionMarketplaceModule,
         CodezTerminalModule,
+        CodezFilesModule,
       ],
       extensionMetadata: [
         typescriptWorker,
@@ -79,6 +84,7 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
         gitlens,
       ],
       defaultPreferences: {
+        'general.language': 'en-US',
         'general.theme': 'opensumi-dark',
         'general.icon': 'vsicons-slim',
         'editor.fontSize': 13,
@@ -102,7 +108,7 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
           fs: 'IndexedDB' as const,
           options: { storeName: `codez-${workspaceDir}` },
         },
-        initialFileTree: async () => SEED_FILES,
+        initialFileTree: async () => seed ?? SEED_FILES,
         // Forward file edits to the WebContainer terminal sandbox so the
         // shell sees the same files the editor edits. The bridge is a no-op
         // until the terminal panel has booted and mounted the workspace.

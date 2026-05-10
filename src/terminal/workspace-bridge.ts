@@ -45,7 +45,30 @@ class WorkspaceBridge {
   private workspaceRoot = '/workspace/codez-workspace';
 
   setWorkspaceRoot(root: string) {
+    if (this.workspaceRoot === root) return;
     this.workspaceRoot = root;
+    // Different workspace -> the WC's mounted FS is now stale. Tear it down
+    // so the next terminal mount boots fresh and re-syncs from the new
+    // BrowserFS workspace. Open terminal panels are remounted by the IDE's
+    // key={workspaceDir} so their cleanup will already have killed the jsh
+    // process; tearing down here also frees the WebContainer slot (only one
+    // is allowed per page at a time).
+    void this.reset();
+  }
+
+  async reset(): Promise<void> {
+    const wc = this.container;
+    this.container = null;
+    this.bootPromise = null;
+    this.mountPromise = null;
+    this.mounted = false;
+    if (wc) {
+      try {
+        wc.teardown();
+      } catch {
+        // already torn down or in-flight teardown — fine.
+      }
+    }
   }
 
   /** Boot (or return) the singleton WebContainer instance. */
