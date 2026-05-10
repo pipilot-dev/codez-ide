@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
-import { OpenVsxExtensionManagerModule } from '@opensumi/ide-extension-manager/lib/browser';
-import { CodezExtensionMarketplaceModule } from './extension-manager/module';
+import { CodezExtensionsModule } from './extensions/module';
 import { CodezTerminalModule } from './terminal/module';
 import { CodezFilesModule } from './files/module';
 import { workspaceBridge } from './terminal/workspace-bridge';
@@ -43,7 +42,7 @@ const layoutConfig = {
       '@opensumi/ide-search',
       '@opensumi/ide-scm',
       '@opensumi/ide-debug',
-      '@opensumi/ide-extension-manager',
+      'codez-extensions',
     ],
   },
   main: { modules: ['@opensumi/ide-editor'] },
@@ -65,8 +64,7 @@ export default function Ide({ workspaceDir, seed, onReady }: IdeProps) {
       workspaceDir,
       layoutConfig,
       modules: [
-        OpenVsxExtensionManagerModule,
-        CodezExtensionMarketplaceModule,
+        CodezExtensionsModule,
         CodezTerminalModule,
         CodezFilesModule,
       ],

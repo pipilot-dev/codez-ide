@@ -1,20 +1,24 @@
 // OpenSumi module that registers the Codez terminal as a tab in the bottom
 // panel. The slot id is 'codez-terminal' — listed in layoutConfig.bottom.
+//
+// All DI primitives come from codez-di so we share runtime identities with
+// the OpenSumi copy that codeblitz pre-bundles. Decorating with the npm copy
+// of @opensumi/di would make the bundled DI raise "Cannot find Provider".
 
-import { Injectable } from '@opensumi/di';
 import {
   BrowserModule,
   ComponentContribution,
-  ComponentRegistry,
+  Domain,
+  Injectable,
   getIcon,
-} from '@opensumi/ide-core-browser';
-import { Domain } from '@opensumi/ide-core-common/lib/di-helper';
+  type ComponentRegistry,
+} from '../codez-di';
 import { CodezTerminalView } from './TerminalView';
 
 const TERMINAL_CONTAINER_ID = 'codez-terminal';
 
 @Domain(ComponentContribution)
-class CodezTerminalContribution implements ComponentContribution {
+class CodezTerminalContribution {
   registerComponent(registry: ComponentRegistry) {
     registry.register(
       TERMINAL_CONTAINER_ID,

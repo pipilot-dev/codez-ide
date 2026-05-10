@@ -53,16 +53,19 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    // WebContainers (used by the Codez terminal panel) require the page to
-    // be cross-origin isolated so it can use SharedArrayBuffer.
+    // Cross-origin isolation is required by WebContainers (SharedArrayBuffer).
+    // `credentialless` lets cross-origin resources (e.g. codeblitz's icon
+    // CDN at gw.alipayobjects.com / at.alicdn.com) load without those
+    // servers having to send Cross-Origin-Resource-Policy headers, while
+    // still satisfying the isolation requirement.
     headers: {
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Embedder-Policy': 'credentialless',
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
   },
   preview: {
     headers: {
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Embedder-Policy': 'credentialless',
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
   },
