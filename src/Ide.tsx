@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
+import { OpenVsxExtensionManagerModule } from '@opensumi/ide-extension-manager/lib/browser';
+import { CodezExtensionMarketplaceModule } from './extension-manager/module';
 
 // Curated bundled extensions. Each is a worker/runtime extension shipped with
 // codeblitz; adding it to `extensionMetadata` makes it appear as installed.
@@ -35,6 +37,7 @@ const layoutConfig = {
       '@opensumi/ide-search',
       '@opensumi/ide-scm',
       '@opensumi/ide-debug',
+      '@opensumi/ide-extension-manager',
     ],
   },
   main: { modules: ['@opensumi/ide-editor'] },
@@ -48,6 +51,7 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
     () => ({
       workspaceDir,
       layoutConfig,
+      modules: [OpenVsxExtensionManagerModule, CodezExtensionMarketplaceModule],
       extensionMetadata: [
         typescriptWorker,
         jsonWorker,

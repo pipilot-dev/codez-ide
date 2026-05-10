@@ -11,6 +11,15 @@ importers:
       '@codeblitzjs/ide-core':
         specifier: ^2.5.1
         version: 2.5.1(electron@42.0.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@opensumi/di':
+        specifier: ^2.1.0
+        version: 2.1.0
+      '@opensumi/ide-core-browser':
+        specifier: 3.7.2-next-1741226843.0
+        version: 3.7.2-next-1741226843.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@opensumi/ide-extension-manager':
+        specifier: 3.7.2-next-1741226843.0
+        version: 3.7.2-next-1741226843.0(electron@42.0.1)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -26,16 +35,19 @@ importers:
         version: 18.3.7(@types/react@18.3.28)
       '@vitejs/plugin-react':
         specifier: ^4.3.4
-        version: 4.7.0(vite@5.4.21(@types/node@24.12.3))
+        version: 4.7.0(vite@5.4.21(@types/node@24.12.3)(less@4.6.4))
+      less:
+        specifier: ^4.6.4
+        version: 4.6.4
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
       vite:
         specifier: ^5.4.11
-        version: 5.4.21(@types/node@24.12.3)
+        version: 5.4.21(@types/node@24.12.3)(less@4.6.4)
       vite-plugin-static-copy:
         specifier: ^4.1.0
-        version: 4.1.0(vite@5.4.21(@types/node@24.12.3))
+        version: 4.1.0(vite@5.4.21(@types/node@24.12.3)(less@4.6.4))
 
 packages:
 
@@ -375,6 +387,10 @@ packages:
     resolution: {integrity: sha512-snIuqlUUmqU7N+jbr3M4GP1j4npmCFX7zZnnSaZNFXhaQplks6AVyMo8aGVeZR4zUQeCXxuXnRzKRTRas0T+hw==}
     engines: {node: '>=8.0.0'}
 
+  '@opensumi/di@2.1.0':
+    resolution: {integrity: sha512-atQ05WSj46NYYI3Ks+JrokOu2zDuelYGW1Ue8WHppWS+yyqrnYlY1tjPmuYCTK7Fo6pRN/Lf5PikthscHEINOA==}
+    engines: {node: '>=8.0.0'}
+
   '@opensumi/events@1.0.0':
     resolution: {integrity: sha512-35puADtoepmImUkpwz0G1bRxFd1dplJmFjjIuijRhNMBM+9wmN5z015mY4BqrtWHmL02s/NuBSjFgHmZSTol8w==}
 
@@ -425,6 +441,9 @@ packages:
 
   '@opensumi/ide-express-file-server@3.7.2-next-1741226843.0':
     resolution: {integrity: sha512-V22vizukWK6rgObzGE8F5PTFsNhIlIg0NVr90UPPU0lFpy8yi18hnLUBmcjOkXEKH9CEgP4UIEVsCmn7MSziKA==}
+
+  '@opensumi/ide-extension-manager@3.7.2-next-1741226843.0':
+    resolution: {integrity: sha512-9m/cpYakQqyyyvAAV2WxVmjPPtw+6B/sd6HJB/cXJvCMGKTpcS08MwFvwmAP1qXOGvoFlQocVBGr6yTcDaLo6w==}
 
   '@opensumi/ide-extension-storage@3.7.2-next-1741226843.0':
     resolution: {integrity: sha512-lErUYARton9VziwTDtqjzvtSEiJMFPgXSfNzZ4UHhHrKQRaZgjwcwP3bncnPBk2hhOfgdMxmYF++sjWcsngk3A==}
@@ -1083,6 +1102,10 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  copy-anything@3.0.5:
+    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
+    engines: {node: '>=12.13'}
+
   core-js@2.6.12:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
@@ -1215,6 +1238,10 @@ packages:
 
   err-code@2.0.3:
     resolution: {integrity: sha512-2bmlRpNKBxT/CRmPOlyISQpNj+qSeYvcym/uT0Jx2bMOlKLtSy1ZmLuVxSEKKyor/N5yhvp/ZiG1oE3DEYMSFA==}
+
+  errno@0.1.8:
+    resolution: {integrity: sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A==}
+    hasBin: true
 
   error-ex@1.3.4:
     resolution: {integrity: sha512-sqQamAnR14VgCr1A618A3sGrygcpK+HEbenA/HiEAkkUwcZIIB/tgWqHFxWgOyDh4nB4JCRimh79dR5Ywc9MDQ==}
@@ -1354,6 +1381,10 @@ packages:
   fs-extra-factory@0.2.1:
     resolution: {integrity: sha512-c13Ry0MkJfo9H47f1xZdslkdltocRiO0+eTHcUR071Qc95y2nZFIkXVx+lrC0vfhb7fN/yhJxC3XCGm5N25qWg==}
     engines: {node: '>=10'}
+
+  fs-extra@11.3.5:
+    resolution: {integrity: sha512-eKpRKAovdpZtR1WopLHxlBWvAgPny3c4gX1G5Jhwmmw4XJj0ifSD5qB5TOo8hmA0wlRKDAOAhEE1yVPgs6Fgcg==}
+    engines: {node: '>=14.14'}
 
   fs-extra@9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
@@ -1505,6 +1536,11 @@ packages:
   ignore@3.3.10:
     resolution: {integrity: sha512-Pgs951kaMm5GXP7MOvxERINe3gsaVjUWFm+UZPSq9xYriQAksyhg0csnS0KXSNRD5NmNdapXEpjxG49+AKh/ug==}
 
+  image-size@0.5.5:
+    resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
+
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
@@ -1601,6 +1637,10 @@ packages:
     resolution: {integrity: sha512-p3EcsicXjit7SaskXHs1hA91QxgTw46Fv6EFKKGS5DRFLD8yKnohjF3hxoju94b/OcMZoQukzpPpBE9uLVKzgQ==}
     engines: {node: '>= 0.4'}
 
+  is-what@4.1.16:
+    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
+    engines: {node: '>=12.13'}
+
   isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
 
@@ -1670,6 +1710,11 @@ packages:
   lcid@3.1.1:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
+
+  less@4.6.4:
+    resolution: {integrity: sha512-OJmO5+HxZLLw0RLzkqaNHzcgEAQG7C0y3aMbwtCzIUFZsLMNNq/1IdAdHEycQ58CwUO3jPTHmoN+tE5I7FQxNg==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   load-json-file@4.0.0:
     resolution: {integrity: sha512-Kx8hMakjX03tiGTLAIdJ+lL0htKnXjEZN6hk/tozf/WOuYGdZBJrZ+rCJRbVCugsjB3jMLn9746NsQIf5VjBMw==}
@@ -1898,6 +1943,11 @@ packages:
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
 
+  needle@3.5.0:
+    resolution: {integrity: sha512-jaQyPKKk2YokHrEg+vFDYxXIHTCBgiZwSHOoVx/8V3GIBS8/VN6NdVRmg8q1ERtPkMvmOvebsgga4sAj5hls/w==}
+    engines: {node: '>= 4.4.x'}
+    hasBin: true
+
   negotiator@0.6.4:
     resolution: {integrity: sha512-myRT3DiWPHqho5PrJaIRyaMv2kgYf0mUVgBNOYMuCH5Ki1yEiQaf/ZJuQ62nvpc44wL5WDbTX7yGJi1Neevw8w==}
     engines: {node: '>= 0.6'}
@@ -1926,6 +1976,15 @@ packages:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
     deprecated: Use your platform's native DOMException instead
+
+  node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
 
   node-gyp-build@4.8.4:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
@@ -2064,6 +2123,10 @@ packages:
     resolution: {integrity: sha512-aOIos8bujGN93/8Ox/jPLh7RwVnPEysynVFE+fQZyg6jKELEHwzgKdLRFHUgXJL6kylijVSBC4BvN9OmsB48Rw==}
     engines: {node: '>=4'}
 
+  parse-node-version@1.0.1:
+    resolution: {integrity: sha512-3YHlOa/JgH6Mnpr05jP9eDG254US9ek25LyIxZlDItp2iJtwyaXQb57lBYLdT3MowkUFYEV2XXNAYIPlESvJlA==}
+    engines: {node: '>= 0.10'}
+
   path-exists@3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
     engines: {node: '>=4'}
@@ -2191,6 +2254,9 @@ packages:
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
+
+  prr@1.0.1:
+    resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
 
   pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
@@ -2421,6 +2487,10 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
+  sax@1.6.0:
+    resolution: {integrity: sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==}
+    engines: {node: '>=11.0.0'}
+
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
@@ -2516,6 +2586,10 @@ packages:
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+    engines: {node: '>=0.10.0'}
+
+  source-map@0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
   spdlog@0.9.0:
@@ -2634,6 +2708,9 @@ packages:
   token-types@4.2.1:
     resolution: {integrity: sha512-6udB24Q737UD/SDsKAHI9FCRP7Bqc9D/MQUV02ORQg5iskjtLJlZJNdN4kKtcdtwCeWIwIHDGaUsTsCCAa8sFQ==}
     engines: {node: '>=10'}
+
+  tr46@0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
   trash@5.2.0:
     resolution: {integrity: sha512-QpczfQrHKoe4O/iWskzRUwybweYK0okbuO8YvUGL2L1XP5/O9x3juUBr5HBY4yvU77wISKG9VtMD/fWjJLM1Lg==}
@@ -2797,6 +2874,12 @@ packages:
 
   web-tree-sitter@0.22.6:
     resolution: {integrity: sha512-hS87TH71Zd6mGAmYCvlgxeGDjqd9GTeqXNqTT+u0Gs51uIozNIaaq/kUAbV/Zf56jb2ZOyG8BxZs2GG9wbLi6Q==}
+
+  webidl-conversions@3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+
+  whatwg-url@5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
   which-typed-array@1.1.20:
     resolution: {integrity: sha512-LYfpUkmqwl0h9A2HL09Mms427Q1RZWuOHsukfVcKRq9q95iQxdw0ix1JQrqbcDR9PH1QDwf5Qo8OZb5lksZ8Xg==}
@@ -3356,6 +3439,8 @@ snapshots:
     dependencies:
       reflect-metadata: 0.1.14
 
+  '@opensumi/di@2.1.0': {}
+
   '@opensumi/events@1.0.0': {}
 
   '@opensumi/extension-installer@0.0.1':
@@ -3588,6 +3673,24 @@ snapshots:
     transitivePeerDependencies:
       - bluebird
       - bufferutil
+      - react
+      - react-dom
+      - supports-color
+      - utf-8-validate
+
+  '@opensumi/ide-extension-manager@3.7.2-next-1741226843.0(electron@42.0.1)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@opensumi/ide-core-common': 3.7.2-next-1741226843.0
+      '@opensumi/ide-core-node': 3.7.2-next-1741226843.0
+      '@opensumi/ide-extension': 3.7.2-next-1741226843.0(electron@42.0.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      compressing: 1.10.5
+      fs-extra: 11.3.5
+      node-fetch: 2.7.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - bluebird
+      - bufferutil
+      - electron
+      - encoding
       - react
       - react-dom
       - supports-color
@@ -4148,7 +4251,7 @@ snapshots:
 
   '@virtuoso.dev/urx@0.2.13': {}
 
-  '@vitejs/plugin-react@4.7.0(vite@5.4.21(@types/node@24.12.3))':
+  '@vitejs/plugin-react@4.7.0(vite@5.4.21(@types/node@24.12.3)(less@4.6.4))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -4156,7 +4259,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.21(@types/node@24.12.3)
+      vite: 5.4.21(@types/node@24.12.3)(less@4.6.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -4469,6 +4572,10 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
+  copy-anything@3.0.5:
+    dependencies:
+      is-what: 4.1.16
+
   core-js@2.6.12: {}
 
   core-util-is@1.0.3: {}
@@ -4591,6 +4698,11 @@ snapshots:
   env-paths@3.0.0: {}
 
   err-code@2.0.3: {}
+
+  errno@0.1.8:
+    dependencies:
+      prr: 1.0.1
+    optional: true
 
   error-ex@1.3.4:
     dependencies:
@@ -4748,6 +4860,12 @@ snapshots:
 
   fs-extra-factory@0.2.1:
     dependencies:
+      universalify: 2.0.1
+
+  fs-extra@11.3.5:
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.2.1
       universalify: 2.0.1
 
   fs-extra@9.1.0:
@@ -4916,6 +5034,9 @@ snapshots:
 
   ignore@3.3.10: {}
 
+  image-size@0.5.5:
+    optional: true
+
   imurmurhash@0.1.4: {}
 
   indent-string@4.0.0: {}
@@ -4998,6 +5119,8 @@ snapshots:
     dependencies:
       which-typed-array: 1.1.20
 
+  is-what@4.1.16: {}
+
   isarray@1.0.0: {}
 
   isarray@2.0.5: {}
@@ -5057,6 +5180,19 @@ snapshots:
   lcid@3.1.1:
     dependencies:
       invert-kv: 3.0.1
+
+  less@4.6.4:
+    dependencies:
+      copy-anything: 3.0.5
+      parse-node-version: 1.0.1
+    optionalDependencies:
+      errno: 0.1.8
+      graceful-fs: 4.2.11
+      image-size: 0.5.5
+      make-dir: 2.1.0
+      mime: 1.6.0
+      needle: 3.5.0
+      source-map: 0.6.1
 
   load-json-file@4.0.0:
     dependencies:
@@ -5270,6 +5406,12 @@ snapshots:
 
   napi-build-utils@2.0.0: {}
 
+  needle@3.5.0:
+    dependencies:
+      iconv-lite: 0.6.3
+      sax: 1.6.0
+    optional: true
+
   negotiator@0.6.4: {}
 
   nested-error-stacks@2.1.1: {}
@@ -5287,6 +5429,12 @@ snapshots:
   node-addon-api@8.7.0: {}
 
   node-domexception@1.0.0: {}
+
+  node-fetch@2.7.0(encoding@0.1.13):
+    dependencies:
+      whatwg-url: 5.0.0
+    optionalDependencies:
+      encoding: 0.1.13
 
   node-gyp-build@4.8.4: {}
 
@@ -5418,6 +5566,8 @@ snapshots:
       error-ex: 1.3.4
       json-parse-better-errors: 1.0.2
 
+  parse-node-version@1.0.1: {}
+
   path-exists@3.0.0: {}
 
   path-is-absolute@1.0.1: {}
@@ -5528,6 +5678,9 @@ snapshots:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+
+  prr@1.0.1:
+    optional: true
 
   pseudomap@1.0.2: {}
 
@@ -5874,6 +6027,9 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
+  sax@1.6.0:
+    optional: true
+
   scheduler@0.23.2:
     dependencies:
       loose-envify: 1.4.0
@@ -5991,6 +6147,9 @@ snapshots:
       smart-buffer: 4.2.0
 
   source-map-js@1.2.1: {}
+
+  source-map@0.6.1:
+    optional: true
 
   spdlog@0.9.0:
     dependencies:
@@ -6125,6 +6284,8 @@ snapshots:
       '@tokenizer/token': 0.3.0
       ieee754: 1.2.1
 
+  tr46@0.0.3: {}
+
   trash@5.2.0:
     dependencies:
       escape-string-applescript: 2.0.0
@@ -6243,15 +6404,15 @@ snapshots:
 
   validate.io-number@1.0.3: {}
 
-  vite-plugin-static-copy@4.1.0(vite@5.4.21(@types/node@24.12.3)):
+  vite-plugin-static-copy@4.1.0(vite@5.4.21(@types/node@24.12.3)(less@4.6.4)):
     dependencies:
       chokidar: 3.6.0
       p-map: 7.0.4
       picocolors: 1.1.1
       tinyglobby: 0.2.16
-      vite: 5.4.21(@types/node@24.12.3)
+      vite: 5.4.21(@types/node@24.12.3)(less@4.6.4)
 
-  vite@5.4.21(@types/node@24.12.3):
+  vite@5.4.21(@types/node@24.12.3)(less@4.6.4):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.14
@@ -6259,6 +6420,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.3
       fsevents: 2.3.3
+      less: 4.6.4
 
   vscode-languageserver-types@3.14.0: {}
 
@@ -6273,6 +6435,13 @@ snapshots:
   web-streams-polyfill@4.0.0-beta.3: {}
 
   web-tree-sitter@0.22.6: {}
+
+  webidl-conversions@3.0.1: {}
+
+  whatwg-url@5.0.0:
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
 
   which-typed-array@1.1.20:
     dependencies:
