@@ -27,6 +27,18 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    // WebContainers (used by the Codez terminal panel) require the page to
+    // be cross-origin isolated so it can use SharedArrayBuffer.
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
+  },
+  preview: {
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
   },
   optimizeDeps: {
     include: ['@codeblitzjs/ide-core/bundle'],

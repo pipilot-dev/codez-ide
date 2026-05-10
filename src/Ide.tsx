@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { AppRenderer } from '@codeblitzjs/ide-core/bundle';
 import { OpenVsxExtensionManagerModule } from '@opensumi/ide-extension-manager/lib/browser';
 import { CodezExtensionMarketplaceModule } from './extension-manager/module';
+import { CodezTerminalModule } from './terminal/module';
 
 // Curated bundled extensions. Each is a worker/runtime extension shipped with
 // codeblitz; adding it to `extensionMetadata` makes it appear as installed.
@@ -29,7 +30,7 @@ interface IdeProps {
 // mergeConfig fully replaces `layoutConfig`, so we have to spell out every
 // slot the default would have provided.
 const layoutConfig = {
-  top: { modules: ['@opensumi/ide-menu-bar'] },
+  top: { modules: ['@opensumi/ide-menu-bar', 'toolbar'] },
   action: { modules: [''] },
   left: {
     modules: [
@@ -41,7 +42,14 @@ const layoutConfig = {
     ],
   },
   main: { modules: ['@opensumi/ide-editor'] },
-  bottom: { modules: ['@opensumi/ide-output', '@opensumi/ide-markers'] },
+  bottom: {
+    modules: [
+      'codez-terminal',
+      '@opensumi/ide-output',
+      'debug-console',
+      '@opensumi/ide-markers',
+    ],
+  },
   statusBar: { modules: ['@opensumi/ide-status-bar'] },
   extra: { modules: ['breadcrumb-menu'] },
 };
@@ -51,7 +59,11 @@ export default function Ide({ workspaceDir, onReady }: IdeProps) {
     () => ({
       workspaceDir,
       layoutConfig,
-      modules: [OpenVsxExtensionManagerModule, CodezExtensionMarketplaceModule],
+      modules: [
+        OpenVsxExtensionManagerModule,
+        CodezExtensionMarketplaceModule,
+        CodezTerminalModule,
+      ],
       extensionMetadata: [
         typescriptWorker,
         jsonWorker,
