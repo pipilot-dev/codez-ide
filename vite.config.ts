@@ -1,6 +1,31 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
+// @opensumi/monaco-editor-core/esm/vs/nls.js does a CommonJS
+// `require('../nls.messages.zh-cn.json')` at module top level. In Vite's
+// ESM dev runtime that throws "require is not defined". The bundle only
+// uses zhCnBundle when locale === 'zh-cn'; we force en-US, so replacing
+// the require with an empty object is safe and avoids the runtime crash.
+function stripMonacoNlsRequire(): Plugin {
+  return {
+    name: 'codez:strip-monaco-nls-require',
+    enforce: 'pre',
+    transform(code, id) {
+      if (
+        id.includes('@opensumi/monaco-editor-core') &&
+        id.endsWith('/esm/vs/nls.js') &&
+        code.includes('zhCnBundle')
+      ) {
+        return code.replace(
+          /const\s+zhCnBundle\s*=\s*require\([^)]+\);?/,
+          'const zhCnBundle = {};',
+        );
+      }
+      return undefined;
+    },
+  };
+}
 
 // Codeblitz ships pre-bundled UMD-ish artifacts under @codeblitzjs/ide-core/bundle.
 // Its webpack runtime fetches WASM and worker chunks via *relative* URLs from
@@ -9,6 +34,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 // here for both `dev` and `build`.
 export default defineConfig({
   plugins: [
+    stripMonacoNlsRequire(),
     react(),
     viteStaticCopy({
       targets: [
